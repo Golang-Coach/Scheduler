@@ -5,7 +5,7 @@ import (
 	"context"
 	"golang.org/x/oauth2"
 	. "github.com/google/go-github/github"
-	"Scheduler/services"
+	. "Scheduler/services"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	)
 	tokenClient := oauth2.NewClient(context, tokenService)
 	client := *NewClient(tokenClient)
-	githubApi := services.NewGithub(&client, client.Repositories, context)
+	githubApi := NewGithub(&client, client.Repositories, context)
 	pack, err := githubApi.GetPackageRepoInfo("Golang-coach", "Lessons")
 	fmt.Println(pack)
 	fmt.Println(err);

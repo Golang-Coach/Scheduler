@@ -47,11 +47,10 @@ func (service *Github) GetPackageRepoInfo(owner string, repositoryName string) (
 	if err != nil {
 		return nil, err
 	}
-
 	pack := &Package{
 		FullName:    *repo.FullName,
 		Description: *repo.Description,
-		ForksCount:  *repo.ForksCount,
+		ForksCount:   *repo.ForksCount,
 		StarsCount:  *repo.StargazersCount,
 	}
 	return pack, nil
