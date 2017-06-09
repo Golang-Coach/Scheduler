@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"context"
 	"golang.org/x/oauth2"
-	. "github.com/google/go-github/github"
-	. "Scheduler/services"
+	"github.com/google/go-github/github"
+	"github.com/Golang-Coach/Scheduler/services"
 )
 
 func main() {
 
-	context := context.Background()
+	backgroundContext := context.Background()
 	tokenService := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: "ff24cdf80f561cd058713b6c647b37edd0cdb0b6"},
+		&oauth2.Token{AccessToken: "22ffe92b14c28bf8ec53e7f0102ed240c1e02633"},
 	)
-	tokenClient := oauth2.NewClient(context, tokenService)
-	client := *NewClient(tokenClient)
-	githubApi := NewGithub(&client, client.Repositories, context)
+	tokenClient := oauth2.NewClient(backgroundContext, tokenService)
+	client := *github.NewClient(tokenClient)
+	githubApi := services.NewGithub(&client, client.Repositories, backgroundContext)
 	pack, err := githubApi.GetPackageRepoInfo("Golang-coach", "Lessons")
 	fmt.Println(pack)
 	fmt.Println(err);

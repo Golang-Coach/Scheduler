@@ -1,9 +1,9 @@
 package services
 
 import (
-	. "github.com/google/go-github/github"
+	"github.com/google/go-github/github"
 	"context"
-	. "Scheduler/models"
+	"github.com/Golang-Coach/Scheduler/models"
 )
 
 type IRepositoryContent interface {
@@ -11,20 +11,20 @@ type IRepositoryContent interface {
 }
 
 type IRepositoryServices interface {
-	Get(ctx context.Context, owner, repo string) (*Repository, *Response, error)
-	ListCommits(ctx context.Context, owner, repo string, opt *CommitsListOptions) ([]*RepositoryCommit, *Response, error)
-	GetReadme(ctx context.Context, owner, repo string, opt *RepositoryContentGetOptions) (*RepositoryContent, *Response, error)
+	Get(ctx context.Context, owner, repo string) (*github.Repository, *github.Response, error)
+	ListCommits(ctx context.Context, owner, repo string, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
+	GetReadme(ctx context.Context, owner, repo string, opt *github.RepositoryContentGetOptions) (*github.RepositoryContent, *github.Response, error)
 }
 
 type IGithub interface {
-	GetPackageRepoInfo(owner string, repositoryName string) (*Package, error)
-	GetLastCommitInfo(owner string, repositoryName string) (*RepositoryCommit, error)
+	GetPackageRepoInfo(owner string, repositoryName string) (*models.Package, error)
+	GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error)
 	GetReadMe(owner string, repositoryName string) (string, error)
-	GetRateLimitInfo(owner string, repositoryName string) (*RateLimits, error)
+	GetRateLimitInfo(owner string, repositoryName string) (*github.RateLimits, error)
 }
 
 type IClient interface {
-	RateLimits(ctx context.Context) (*RateLimits, *Response, error)
+	RateLimits(ctx context.Context) (*github.RateLimits, *github.Response, error)
 }
 
 type Github struct {
@@ -42,12 +42,12 @@ func NewGithub(client IClient, repositoryServices IRepositoryServices, context c
 	}
 }
 
-func (service *Github) GetPackageRepoInfo(owner string, repositoryName string) (*Package, error) {
+func (service *Github) GetPackageRepoInfo(owner string, repositoryName string) (*models.Package, error) {
 	repo, _, err := service.repositoryServices.Get(service.context, owner, repositoryName)
 	if err != nil {
 		return nil, err
 	}
-	pack := &Package{
+	pack := &models.Package{
 		FullName:    *repo.FullName,
 		Description: *repo.Description,
 		ForksCount:   *repo.ForksCount,
@@ -56,7 +56,7 @@ func (service *Github) GetPackageRepoInfo(owner string, repositoryName string) (
 	return pack, nil
 }
 
-func (service *Github) GetLastCommitInfo(owner string, repositoryName string) (*RepositoryCommit, error) {
+func (service *Github) GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error) {
 	commitInfo, _, err := service.repositoryServices.ListCommits(service.context, owner, repositoryName, nil)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (service *Github) GetReadMe(owner string, repositoryName string) (string, e
 	return readme.GetContent()
 }
 
-func (service *Github) GetRateLimitInfo() (*RateLimits, error) {
+func (service *Github) GetRateLimitInfo() (*github.RateLimits, error) {
 	rateLimitInfo, _, err := service.client.RateLimits(service.context)
 	return rateLimitInfo, err
 }
