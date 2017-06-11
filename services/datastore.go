@@ -4,6 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"github.com/Golang-Coach/Scheduler/models"
 	"gopkg.in/mgo.v2/bson"
+	"fmt"
 )
 
 type ICollection interface {
@@ -45,14 +46,15 @@ func (store DataStore) FindPackage(query interface{}) *mgo.Query {
 }
 
 func (store DataStore) FindPackageWithinLimit(query interface{}, skip int, limit int) *mgo.Query {
+	fmt.Println(skip)
 	// find package with limit
 	result := store.collection.Find(query)
 	if limit > 0 {
-		return result.Limit(limit)
+		result = result.Limit(limit)
 	}
 
 	if skip > 0 {
-		return result.Skip(skip)
+		result = result.Skip(skip)
 	}
 	return result
 }
