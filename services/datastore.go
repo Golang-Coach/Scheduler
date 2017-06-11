@@ -1,32 +1,31 @@
 package services
 
 import (
-	"gopkg.in/mgo.v2"
 	"github.com/Golang-Coach/Scheduler/models"
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
+	"gopkg.in/mgo.v2"
 )
 
 type ICollection interface {
-	Insert(...interface {}) error
+	Insert(...interface{}) error
 	Update(selector interface{}, update interface{}) error
 	Find(query interface{}) *mgo.Query
 }
 
 type IDataStore interface {
-	AddPackage(pack models.RepositoryInfo) error
+	AddPackage(repositoryInfo models.RepositoryInfo) error
 	UpdatePackage(pack *models.RepositoryInfo) error
-	FindPackage(query interface{}) *mgo.Query
-	FindPackageWithinLimit(query interface{}, skip int, limit int) *mgo.Query
+	FindPackage(query interface{}) (*models.RepositoryInfo, error)
+	FindPackageWithinLimit(query interface{}, skip int, limit int) (*[]models.RepositoryInfo, error)
 }
 
 type DataStore struct {
 	collection ICollection
 }
 
-func NewDataStore(collection ICollection) IDataStore{
+func NewDataStore(collection ICollection) IDataStore {
 	return DataStore{
-		collection:collection,
+		collection: collection,
 	}
 }
 
@@ -40,14 +39,16 @@ func (store DataStore) UpdatePackage(repositoryInfo *models.RepositoryInfo) erro
 	return store.collection.Update(bson.M{"_id": repositoryInfo.ID}, repositoryInfo)
 }
 
-func (store DataStore) FindPackage(query interface{}) *mgo.Query {
+func (store DataStore) FindPackage(query interface{}) (*models.RepositoryInfo, error) {
 	// find package with limit
-	return store.collection.Find(query)
+	repositoryInfo := &models.RepositoryInfo{}
+	err := store.collection.Find(query).All(repositoryInfo)
+	return repositoryInfo, err;
 }
 
-func (store DataStore) FindPackageWithinLimit(query interface{}, skip int, limit int) *mgo.Query {
-	fmt.Println(skip)
+func (store DataStore) FindPackageWithinLimit(query interface{}, skip int, limit int) (*[]models.RepositoryInfo, error) {
 	// find package with limit
+	repositoryInfos := &[]models.RepositoryInfo{}
 	result := store.collection.Find(query)
 	if limit > 0 {
 		result = result.Limit(limit)
@@ -56,8 +57,6 @@ func (store DataStore) FindPackageWithinLimit(query interface{}, skip int, limit
 	if skip > 0 {
 		result = result.Skip(skip)
 	}
-	return result
+	err :=  result.All(repositoryInfos)
+	return repositoryInfos, err
 }
-
-
-

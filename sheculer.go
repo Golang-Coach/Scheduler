@@ -15,16 +15,18 @@ type GithubResponse struct {
 
 func Schedule(dataStore services.IDataStore, githubService services.IGithub) {
 	// get data from database
-	repositoriesQuery := dataStore.FindPackageWithinLimit(bson.M{}, 0, 500)
-	repositories := []models.RepositoryInfo{}
-	repositoriesQuery.All(&repositories)
+	repositories, err := dataStore.FindPackageWithinLimit(bson.M{}, 0, 500)
+	if err != nil {
+		fmt.Println("Error")
+		return
+	}
 
-	responses := updatePackage(repositories, githubService)
+	responses := updatePackage(*repositories, githubService)
 
 	for _, response := range responses {
 		if response.err != nil {
 			fmt.Println(response.err)
-		}else if response.RepositoryInfo != nil {
+		} else if response.RepositoryInfo != nil {
 			dataStore.UpdatePackage(response.RepositoryInfo)
 		}
 	}
@@ -51,7 +53,7 @@ func updatePackage(repositories []models.RepositoryInfo, githubService services.
 			if len(responses) == len(repositories) {
 				return responses
 			}
-		case <-time.After(5 * time.Minute):
+		case <-time.After(5 * time.Second):
 			fmt.Println("Timeout")
 			return responses;
 		}

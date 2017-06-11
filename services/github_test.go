@@ -1,4 +1,4 @@
-package services
+package services_test
 
 import (
 	"github.com/Golang-Coach/Scheduler/mocks"
@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"github.com/Golang-Coach/Scheduler/models"
 	"time"
+	"github.com/Golang-Coach/Scheduler/services"
 )
 
 func TestGithubAPI(t *testing.T) {
@@ -17,7 +18,7 @@ func TestGithubAPI(t *testing.T) {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
-		githubService := NewGithub(client, repositoryServices, backgroundContext)
+		githubService := services.NewGithub(client, repositoryServices, backgroundContext)
 		Convey("Should return repository information", func() {
 			fullName := "facebook/react"
 			starCount := 10
@@ -45,7 +46,7 @@ func TestGithubAPI(t *testing.T) {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
-		githubService := NewGithub(client, repositoryServices, backgroundContext)
+		githubService := services.NewGithub(client, repositoryServices, backgroundContext)
 		Convey("should get return repository readme information", func() {
 			content := "ABC"
 			encodedContent := base64.StdEncoding.EncodeToString([]byte(content))
@@ -69,7 +70,7 @@ func TestGithubAPI(t *testing.T) {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
-		githubService := NewGithub(client, repositoryServices, backgroundContext)
+		githubService := services.NewGithub(client, repositoryServices, backgroundContext)
 		Convey("should should return last commit information", func() {
 			repositoryCommit := new(RepositoryCommit)
 			repositoryServices.On("ListCommits", backgroundContext, "golang-coach", "Lessons",
@@ -90,7 +91,7 @@ func TestGithubAPI(t *testing.T) {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
-		githubService := NewGithub(client, repositoryServices, backgroundContext)
+		githubService := services.NewGithub(client, repositoryServices, backgroundContext)
 		Convey("should should return rate limit information", func() {
 			rateLimit := new(RateLimits)
 			client.On("RateLimits", backgroundContext).Return(rateLimit, nil, nil)
@@ -109,7 +110,7 @@ func TestGithubAPI(t *testing.T) {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
-		githubService := NewGithub(client, repositoryServices, backgroundContext)
+		githubService := services.NewGithub(client, repositoryServices, backgroundContext)
 
 		Convey("Should return updated repository information", func() {
 			fullName := "facebook/react"
