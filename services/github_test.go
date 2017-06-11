@@ -13,7 +13,7 @@ import (
 func TestGithubAPI(t *testing.T) {
 
 
-	Convey("GetPackageRepoInfo", t, func() {
+	Convey("GetRepositoryInfo", t, func() {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
@@ -29,13 +29,13 @@ func TestGithubAPI(t *testing.T) {
 
 			}
 			repositoryServices.On("Get", backgroundContext, "golang-coach", "Lessons").Return(repo, nil, nil)
-			pack, _ := githubService.GetPackageRepoInfo("golang-coach", "Lessons")
-			So(pack.ForksCount, ShouldEqual, starCount)
+			repositoryInfo, _ := githubService.GetRepositoryInfo("golang-coach", "Lessons")
+			So(repositoryInfo.ForksCount, ShouldEqual, starCount)
 		})
 
 		Convey("Should return error when failed to retrieve  repository information", func() {
 			repositoryServices.On("Get", backgroundContext, "golang-coach", "Lessons").Return(nil, nil, errors.New("Error has been occurred"))
-			_, err := githubService.GetPackageRepoInfo("golang-coach", "Lessons")
+			_, err := githubService.GetRepositoryInfo("golang-coach", "Lessons")
 			So(err, ShouldNotBeEmpty)
 		})
 	})

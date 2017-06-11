@@ -4,6 +4,9 @@ import (
 	"github.com/google/go-github/github"
 	"context"
 	"github.com/Golang-Coach/Scheduler/models"
+	"strings"
+	"errors"
+	"fmt"
 )
 
 type IRepositoryContent interface {
@@ -17,10 +20,11 @@ type IRepositoryServices interface {
 }
 
 type IGithub interface {
-	GetPackageRepoInfo(owner string, repositoryName string) (*models.Package, error)
+	GetRepositoryInfo(owner string, repositoryName string) (*models.RepositoryInfo, error)
 	GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error)
 	GetReadMe(owner string, repositoryName string) (string, error)
-	GetRateLimitInfo(owner string, repositoryName string) (*github.RateLimits, error)
+	GetRateLimitInfo() (*github.RateLimits, error)
+	GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error)
 }
 
 type IClient interface {
@@ -28,35 +32,37 @@ type IClient interface {
 }
 
 type Github struct {
-	client  IClient
+	client             IClient
 	repositoryServices IRepositoryServices
-	context context.Context
+	context            context.Context
 }
-
 
 func NewGithub(client IClient, repositoryServices IRepositoryServices, context context.Context) Github {
 	return Github{
-		client:  client,
+		client:             client,
 		repositoryServices: repositoryServices,
-		context: context,
+		context:            context,
 	}
 }
 
-func (service *Github) GetPackageRepoInfo(owner string, repositoryName string) (*models.Package, error) {
+func (service Github) GetRepositoryInfo(owner string, repositoryName string) (*models.RepositoryInfo, error) {
 	repo, _, err := service.repositoryServices.Get(service.context, owner, repositoryName)
 	if err != nil {
 		return nil, err
 	}
-	pack := &models.Package{
+	fmt.Printf("%+v\n", *repo)
+	repositoryInfo := &models.RepositoryInfo{
+		RepoName: *repo.Name,
+		Owner:      strings.Split(*repo.FullName, "/")[0] ,
 		FullName:    *repo.FullName,
 		Description: *repo.Description,
-		ForksCount:   *repo.ForksCount,
+		ForksCount:  *repo.ForksCount,
 		StarsCount:  *repo.StargazersCount,
 	}
-	return pack, nil
+	return repositoryInfo, nil
 }
 
-func (service *Github) GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error) {
+func (service Github) GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error) {
 	commitInfo, _, err := service.repositoryServices.ListCommits(service.context, owner, repositoryName, nil)
 	if err != nil {
 		return nil, err
@@ -64,7 +70,7 @@ func (service *Github) GetLastCommitInfo(owner string, repositoryName string) (*
 	return commitInfo[0], nil
 }
 
-func (service *Github) GetReadMe(owner string, repositoryName string) (string, error) {
+func (service Github) GetReadMe(owner string, repositoryName string) (string, error) {
 	readme, _, err := service.repositoryServices.GetReadme(service.context, owner, repositoryName, nil)
 	if err != nil {
 		return "", err
@@ -74,7 +80,42 @@ func (service *Github) GetReadMe(owner string, repositoryName string) (string, e
 	return readme.GetContent()
 }
 
-func (service *Github) GetRateLimitInfo() (*github.RateLimits, error) {
+func (service Github) GetRateLimitInfo() (*github.RateLimits, error) {
 	rateLimitInfo, _, err := service.client.RateLimits(service.context)
 	return rateLimitInfo, err
+}
+
+func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error) {
+	// Call last update information from Github API
+	if len(strings.TrimSpace(repositoryInfo.Owner)) == 0 || len(strings.TrimSpace(repositoryInfo.RepoName)) == 0 {
+		return nil, errors.New("Repository Name is incorrect")
+	}
+
+	// check with existing caller api
+	lastCommitInfo, err := service.GetLastCommitInfo(repositoryInfo.Owner, repositoryInfo.RepoName)
+	if err != nil {
+		return nil, err
+	}
+
+	if lastCommitInfo.Commit.Committer.GetDate().Equal(repositoryInfo.UpdatedAt) {
+		return nil, nil
+	}
+
+	newRepositoryInfo, err := service.GetRepositoryInfo(repositoryInfo.Owner, repositoryInfo.RepoName)
+	if err != nil {
+		return nil, err
+	}
+
+	newRepositoryInfo.ID = repositoryInfo.ID
+	newRepositoryInfo.UpdatedAt = lastCommitInfo.Commit.Committer.GetDate()
+	newRepositoryInfo.LastUpdatedBy = lastCommitInfo.Commit.Committer.GetName()
+
+	content, err := service.GetReadMe(repositoryInfo.Owner, repositoryInfo.RepoName)
+	if err != nil {
+		return nil, err
+	}
+	newRepositoryInfo.ReadMe = content
+
+	// data is same ignore, else update data
+	return newRepositoryInfo, nil
 }

@@ -34,15 +34,15 @@ func (_m *IGithub) GetLastCommitInfo(owner string, repositoryName string) (*gith
 }
 
 // GetPackageRepoInfo provides a mock function with given fields: owner, repositoryName
-func (_m *IGithub) GetPackageRepoInfo(owner string, repositoryName string) (*models.Package, error) {
+func (_m *IGithub) GetPackageRepoInfo(owner string, repositoryName string) (*models.RepositoryInfo, error) {
 	ret := _m.Called(owner, repositoryName)
 
-	var r0 *models.Package
-	if rf, ok := ret.Get(0).(func(string, string) *models.Package); ok {
+	var r0 *models.RepositoryInfo
+	if rf, ok := ret.Get(0).(func(string, string) *models.RepositoryInfo); ok {
 		r0 = rf(owner, repositoryName)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*models.Package)
+			r0 = ret.Get(0).(*models.RepositoryInfo)
 		}
 	}
 
