@@ -1,0 +1,1 @@
+# Golang-Coach Scheduler [![Build Status](https://travis-ci.org/Golang-Coach/Scheduler.svg?branch=master)](https://travis-ci.org/Golang-Coach/Scheduler) [![Coverage Status](https://coveralls.io/repos/github/Golang-Coach/Scheduler/badge.svg?branch=master)](https://coveralls.io/github/Golang-Coach/Scheduler?branch=master)

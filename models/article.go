@@ -1,4 +1,4 @@
-package main
+package models
 
 type Article struct {
 	Name string

@@ -1,4 +1,4 @@
-package main
+package mailer
 
 import (
 	"gopkg.in/mailgun/mailgun-go.v1"
