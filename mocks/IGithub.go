@@ -33,36 +33,13 @@ func (_m *IGithub) GetLastCommitInfo(owner string, repositoryName string) (*gith
 	return r0, r1
 }
 
-// GetPackageRepoInfo provides a mock function with given fields: owner, repositoryName
-func (_m *IGithub) GetPackageRepoInfo(owner string, repositoryName string) (*models.RepositoryInfo, error) {
-	ret := _m.Called(owner, repositoryName)
-
-	var r0 *models.RepositoryInfo
-	if rf, ok := ret.Get(0).(func(string, string) *models.RepositoryInfo); ok {
-		r0 = rf(owner, repositoryName)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*models.RepositoryInfo)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(string, string) error); ok {
-		r1 = rf(owner, repositoryName)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetRateLimitInfo provides a mock function with given fields: owner, repositoryName
-func (_m *IGithub) GetRateLimitInfo(owner string, repositoryName string) (*github.RateLimits, error) {
-	ret := _m.Called(owner, repositoryName)
+// GetRateLimitInfo provides a mock function with given fields:
+func (_m *IGithub) GetRateLimitInfo() (*github.RateLimits, error) {
+	ret := _m.Called()
 
 	var r0 *github.RateLimits
-	if rf, ok := ret.Get(0).(func(string, string) *github.RateLimits); ok {
-		r0 = rf(owner, repositoryName)
+	if rf, ok := ret.Get(0).(func() *github.RateLimits); ok {
+		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*github.RateLimits)
@@ -70,8 +47,8 @@ func (_m *IGithub) GetRateLimitInfo(owner string, repositoryName string) (*githu
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, string) error); ok {
-		r1 = rf(owner, repositoryName)
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -93,6 +70,52 @@ func (_m *IGithub) GetReadMe(owner string, repositoryName string) (string, error
 	var r1 error
 	if rf, ok := ret.Get(1).(func(string, string) error); ok {
 		r1 = rf(owner, repositoryName)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetRepositoryInfo provides a mock function with given fields: owner, repositoryName
+func (_m *IGithub) GetRepositoryInfo(owner string, repositoryName string) (*models.RepositoryInfo, error) {
+	ret := _m.Called(owner, repositoryName)
+
+	var r0 *models.RepositoryInfo
+	if rf, ok := ret.Get(0).(func(string, string) *models.RepositoryInfo); ok {
+		r0 = rf(owner, repositoryName)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.RepositoryInfo)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(owner, repositoryName)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUpdatedRepositoryInfo provides a mock function with given fields: repositoryInfo
+func (_m *IGithub) GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error) {
+	ret := _m.Called(repositoryInfo)
+
+	var r0 *models.RepositoryInfo
+	if rf, ok := ret.Get(0).(func(*models.RepositoryInfo) *models.RepositoryInfo); ok {
+		r0 = rf(repositoryInfo)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.RepositoryInfo)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*models.RepositoryInfo) error); ok {
+		r1 = rf(repositoryInfo)
 	} else {
 		r1 = ret.Error(1)
 	}

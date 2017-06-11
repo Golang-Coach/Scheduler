@@ -8,6 +8,8 @@ import (
 	"testing"
 	"errors"
 	"encoding/base64"
+	"github.com/Golang-Coach/Scheduler/models"
+	"time"
 )
 
 func TestGithubAPI(t *testing.T) {
@@ -100,6 +102,187 @@ func TestGithubAPI(t *testing.T) {
 			client.On("RateLimits", backgroundContext).Return(nil, nil, errors.New("Error has been occurred"))
 			_, err := githubService.GetRateLimitInfo()
 			So(err, ShouldNotBeEmpty)
+		})
+	})
+
+	Convey("GetUpdatedRepositoryInfo", t, func() {
+		backgroundContext := context.Background()
+		repositoryServices := new(mocks.IRepositoryServices)
+		client := new(mocks.IClient)
+		githubService := NewGithub(client, repositoryServices, backgroundContext)
+
+		Convey("Should return updated repository information", func() {
+			fullName := "facebook/react"
+
+			starCount := 10
+			repo := &Repository{
+				Name:            &fullName,
+				FullName:        &fullName,
+				Description:     &fullName,
+				ForksCount:      &starCount,
+				StargazersCount: &starCount,
+
+			}
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "react",
+				UpdatedAt: time.Now(),
+			}
+			commitTime := time.Now()
+			repositoryCommit := &RepositoryCommit{
+				Commit:&Commit{
+					Committer:&CommitAuthor{
+						Date: &commitTime,
+					},
+				},
+			}
+			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
+				(*CommitsListOptions)(nil)).Return([]*RepositoryCommit{repositoryCommit}, nil, nil)
+			repositoryServices.On("Get", backgroundContext, "facebook", "react").Return(repo, nil, nil)
+
+			content := "ABC"
+			encodedContent := base64.StdEncoding.EncodeToString([]byte(content))
+			repositoryContent := &RepositoryContent{
+				Content: &encodedContent,
+			}
+			repositoryServices.On("GetReadme", backgroundContext, "facebook", "react", (*RepositoryContentGetOptions)(nil)).Return(repositoryContent, nil, nil)
+
+			repositoryInfo, _ := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(repositoryInfo.ForksCount, ShouldEqual, starCount)
+		})
+
+		Convey("Should return error when repository name is empty", func() {
+			fullName := "facebook/react"
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "",
+				UpdatedAt: time.Now(),
+			}
+
+			repo, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldNotBeEmpty)
+			So(repo, ShouldBeNil)
+		})
+
+		Convey("Should return error when repository Owner is empty", func() {
+			fullName := "facebook/react"
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "",
+				RepoName: "react",
+				UpdatedAt: time.Now(),
+			}
+
+			_, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldNotBeEmpty)
+		})
+
+		Convey("Should return error when failed to retrieve last commit information", func() {
+			fullName := "facebook/react"
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "react",
+				UpdatedAt: time.Now(),
+			}
+			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
+				(*CommitsListOptions)(nil)).Return(nil, nil,  errors.New("Error has been occurred"))
+
+			_, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldNotBeEmpty)
+		})
+
+		Convey("Should return nil where repository does not change", func() {
+			fullName := "facebook/react"
+
+			commitTime := time.Now()
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "react",
+				UpdatedAt: commitTime,
+			}
+			repositoryCommit := &RepositoryCommit{
+				Commit:&Commit{
+					Committer:&CommitAuthor{
+						Date: &commitTime,
+					},
+				},
+			}
+			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
+				(*CommitsListOptions)(nil)).Return([]*RepositoryCommit{repositoryCommit}, nil, nil)
+			repositoryInfo, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldBeNil)
+			So(repositoryInfo, ShouldBeNil)
+		})
+
+		Convey("Should return error when GetRepositoryInfo return error", func() {
+			fullName := "facebook/react"
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "react",
+				UpdatedAt: time.Now(),
+			}
+			commitTime := time.Now()
+			repositoryCommit := &RepositoryCommit{
+				Commit:&Commit{
+					Committer:&CommitAuthor{
+						Date: &commitTime,
+					},
+				},
+			}
+			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
+				(*CommitsListOptions)(nil)).Return([]*RepositoryCommit{repositoryCommit}, nil, nil)
+			repositoryServices.On("Get", backgroundContext, "facebook", "react").Return(nil, nil, errors.New("There is some problem"))
+
+			repositoryInfo, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldNotBeEmpty)
+			So(repositoryInfo, ShouldBeNil)
+		})
+
+		Convey("Should return error when ReadMe throws error", func() {
+			fullName := "facebook/react"
+
+			starCount := 10
+			repo := &Repository{
+				Name:            &fullName,
+				FullName:        &fullName,
+				Description:     &fullName,
+				ForksCount:      &starCount,
+				StargazersCount: &starCount,
+
+			}
+
+			storeRepo := &models.RepositoryInfo{
+				FullName:fullName,
+				Owner: "facebook",
+				RepoName: "react",
+				UpdatedAt: time.Now(),
+			}
+			commitTime := time.Now()
+			repositoryCommit := &RepositoryCommit{
+				Commit:&Commit{
+					Committer:&CommitAuthor{
+						Date: &commitTime,
+					},
+				},
+			}
+			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
+				(*CommitsListOptions)(nil)).Return([]*RepositoryCommit{repositoryCommit}, nil, nil)
+			repositoryServices.On("Get", backgroundContext, "facebook", "react").Return(repo, nil, nil)
+			repositoryServices.On("GetReadme", backgroundContext, "facebook", "react", (*RepositoryContentGetOptions)(nil)).Return(nil, nil,  errors.New("There is some problem"))
+
+			repositoryInfo, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
+			So(err, ShouldNotBeEmpty)
+			So(repositoryInfo, ShouldBeNil)
 		})
 	})
 

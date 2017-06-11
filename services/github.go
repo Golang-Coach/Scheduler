@@ -6,6 +6,7 @@ import (
 	"github.com/Golang-Coach/Scheduler/models"
 	"strings"
 	"errors"
+	"fmt"
 )
 
 type IRepositoryContent interface {
@@ -65,6 +66,7 @@ func (service Github) GetLastCommitInfo(owner string, repositoryName string) (*g
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("%+v", commitInfo[0])
 	return commitInfo[0], nil
 }
 
