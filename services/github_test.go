@@ -11,17 +11,16 @@ import (
 )
 
 func TestGithubAPI(t *testing.T) {
-
-
 	Convey("GetRepositoryInfo", t, func() {
 		backgroundContext := context.Background()
 		repositoryServices := new(mocks.IRepositoryServices)
 		client := new(mocks.IClient)
 		githubService := NewGithub(client, repositoryServices, backgroundContext)
 		Convey("Should return repository information", func() {
-			fullName := "ABC"
+			fullName := "facebook/react"
 			starCount := 10
 			repo := &Repository{
+				Name:            &fullName,
 				FullName:        &fullName,
 				Description:     &fullName,
 				ForksCount:      &starCount,
@@ -105,4 +104,3 @@ func TestGithubAPI(t *testing.T) {
 	})
 
 }
-

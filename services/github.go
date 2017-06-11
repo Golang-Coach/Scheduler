@@ -6,7 +6,6 @@ import (
 	"github.com/Golang-Coach/Scheduler/models"
 	"strings"
 	"errors"
-	"fmt"
 )
 
 type IRepositoryContent interface {
@@ -50,7 +49,6 @@ func (service Github) GetRepositoryInfo(owner string, repositoryName string) (*m
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("%+v\n", *repo)
 	repositoryInfo := &models.RepositoryInfo{
 		RepoName: *repo.Name,
 		Owner:      strings.Split(*repo.FullName, "/")[0] ,
