@@ -10,6 +10,7 @@ type IClient struct {
 	mock.Mock
 }
 
+
 // RateLimits provides a mock function with given fields: ctx
 func (_m *IClient) RateLimits(ctx context.Context) (*github.RateLimits, *github.Response, error) {
 	ret := _m.Called(ctx)

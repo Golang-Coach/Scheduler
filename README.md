@@ -2,6 +2,7 @@
 
 ##Todos
 - [ ] Add logic to cache last scan count 
+- [ ] Cron Logic
 - [ ] Add logic to pass sensitive information by environment variables
 - [ ] Configuration file for dev and production
 - [ ] Docker Container with run instructions
