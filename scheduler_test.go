@@ -50,7 +50,7 @@ func TestSchedule(t *testing.T) {
 			RepoName: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
-		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).WaitUntil(time.After(6 * time.Second)).Return(&repos, nil)
+		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).WaitUntil(time.After(6 * time.Second)).Return(&repositoryInfo, nil)
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, nil)
 		Schedule(dataStore, githubService)
 		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
