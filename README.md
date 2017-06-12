@@ -7,4 +7,5 @@
 - [ ] Docker Container with run instructions
 - [ ] Logs for failure and mail for same
 - [ ] Unit testing for remaining components
+- [ ] Integrate with golint and (https://goreportcard.com)[https://goreportcard.com]
 - [ ] Verification
