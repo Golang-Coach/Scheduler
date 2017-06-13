@@ -4,6 +4,7 @@ import (
 	"github.com/google/go-github/github"
 	"context"
 	"github.com/Golang-Coach/Scheduler/models"
+	"github.com/shurcooL/github_flavored_markdown"
 	"strings"
 	"errors"
 )
@@ -108,7 +109,7 @@ func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.Repository
 	if err != nil {
 		return nil, err
 	}
-	newRepositoryInfo.ReadMe = content
+	newRepositoryInfo.ReadMe = string(github_flavored_markdown.Markdown([]byte(content)))
 
 	// data is same ignore, else update data
 	return newRepositoryInfo, nil
