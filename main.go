@@ -11,8 +11,10 @@ import (
 	"context"
 	"github.com/google/go-github/github"
 
+
 	//"log"
 	//"github.com/Golang-Coach/Scheduler/models"
+	//"golang.org/x/oauth2"
 )
 
 func main() {
@@ -27,11 +29,11 @@ func main() {
 	//client := *github.NewClient(tokenClient)
 	client := *github.NewClient(nil)
 	githubApi := services.NewGithub(&client, client.Repositories, backgroundContext)
-	//pack, err := githubApi.GetLastCommitInfo("Golang-coach", "Lessons")
+	pack, err := githubApi.GetLastCommitInfo("Golang-Coach", "Lessons")
 	//packa := models.RepositoryInfo{
 	//	UpdatedAt: pack.Commit.Committer.GetDate(),
 	//}
-	//fmt.Println(pack.Commit.Committer.GetDate())
+	fmt.Println(pack.Commit.Committer.GetDate())
 	//fmt.Println(packa)
 	//fmt.Println(err);
 
@@ -40,9 +42,9 @@ func main() {
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{"localhost:27017"}, // Get HOST + PORT
 		Timeout:  5 * time.Second,
-		Database: "admin",                                                                             // It can be anything
-		Username: "coach",                                                                             // Username
-		Password: "Pa55word", // PASSWORD
+		//Database: "golancoach",                                                                             // It can be anything
+		//Username: "coach",                                                                             // Username
+		//Password: "Pa55word", // PASSWORD
 		//DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
 		//	return tls.Dial("tcp", addr.String(), &tls.Config{})
 		//},
@@ -86,6 +88,7 @@ func main() {
 	//}
 	dataStore := services.NewDataStore(collection)
 	Schedule(dataStore, githubApi)
+	//Schedule(dataStore, githubApi)
 	//fmt.Println(collection)
 	//fmt.Println(githubApi.GetRateLimitInfo())
 
