@@ -44,6 +44,6 @@ jobs:
                 TAG=0.1.$CIRCLE_BUILD_NUM
                 docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
                 docker build -t   golangcoach/scheduler:$TAG .      # (4)
-                docker push golangcoach/server:$TAG
+                docker push golangcoach/scheduler:$TAG
                 docker build -t   golangcoach/scheduler .      # (4)
                 docker push golangcoach/scheduler
