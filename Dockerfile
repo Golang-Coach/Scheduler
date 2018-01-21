@@ -2,8 +2,8 @@ FROM golang:latest
 
 RUN mkdir /app
 
-ADD server_* /app/
+ADD Scheduler_* /app/
 
 WORKDIR /app
 
-CMD ["/app/server_linux_amd64"]
+CMD ["/app/Scheduler_linux_amd64"]
