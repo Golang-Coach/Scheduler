@@ -7,6 +7,7 @@ import (
 	"github.com/shurcooL/github_flavored_markdown"
 	"strings"
 	"errors"
+	"fmt"
 )
 
 type IRepositoryServices interface {
@@ -47,12 +48,12 @@ func (service Github) GetRepositoryInfo(owner string, repositoryName string) (*m
 		return nil, err
 	}
 	repositoryInfo := &models.RepositoryInfo{
-		RepoName: *repo.Name,
+		Name: *repo.Name,
 		Owner:      strings.Split(*repo.FullName, "/")[0] ,
 		FullName:    *repo.FullName,
 		Description: *repo.Description,
-		ForksCount:  *repo.ForksCount,
-		StarsCount:  *repo.StargazersCount,
+		Forks:  *repo.ForksCount,
+		Stars:  *repo.StargazersCount,
 	}
 	return repositoryInfo, nil
 }
@@ -82,12 +83,12 @@ func (service Github) GetRateLimitInfo() (*github.RateLimits, error) {
 
 func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error) {
 	// Call last update information from Github API
-	if len(strings.TrimSpace(repositoryInfo.Owner)) == 0 || len(strings.TrimSpace(repositoryInfo.RepoName)) == 0 {
+	if len(strings.TrimSpace(repositoryInfo.Owner)) == 0 || len(strings.TrimSpace(repositoryInfo.Name)) == 0 {
 		return nil, errors.New("Repository Name is incorrect")
 	}
 
 	// check with existing caller api
-	lastCommitInfo, err := service.GetLastCommitInfo(repositoryInfo.Owner, repositoryInfo.RepoName)
+	lastCommitInfo, err := service.GetLastCommitInfo(repositoryInfo.Owner, repositoryInfo.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -96,16 +97,26 @@ func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.Repository
 		return nil, nil
 	}
 
-	newRepositoryInfo, err := service.GetRepositoryInfo(repositoryInfo.Owner, repositoryInfo.RepoName)
+	newRepositoryInfo, err := service.GetRepositoryInfo(repositoryInfo.Owner, repositoryInfo.Name)
 	if err != nil {
 		return nil, err
 	}
 
 	newRepositoryInfo.ID = repositoryInfo.ID
 	newRepositoryInfo.UpdatedAt = lastCommitInfo.Commit.Committer.GetDate()
-	newRepositoryInfo.LastUpdatedBy = lastCommitInfo.Commit.Committer.GetName()
+	newRepositoryInfo.User = models.User{
+		Name: *lastCommitInfo.Commit.Author.Name,
+		UserName:*lastCommitInfo.Author.Login,
+		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
+	}
 
-	content, err := service.GetReadMe(repositoryInfo.Owner, repositoryInfo.RepoName)
+	fmt.Println(models.User{
+		Name: *lastCommitInfo.Commit.Author.Name,
+		UserName:*lastCommitInfo.Author.Login,
+		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
+	})
+
+	content, err := service.GetReadMe(repositoryInfo.Owner, repositoryInfo.Name)
 	if err != nil {
 		return nil, err
 	}

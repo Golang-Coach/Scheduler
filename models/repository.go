@@ -7,16 +7,17 @@ import (
 
 type RepositoryInfo struct{
 	ID bson.ObjectId  `bson:"_id,omitempty"`
-	RepoName string
+	Name string
 	Owner string
 	FullName string
 	Description string
-	StarsCount int
-	ForksCount int
+	Stars int
+	Forks int
 	UpdatedAt time.Time
 	LastUpdatedBy string
 	ReadMe string
 	Tags []string
 	Categories []string
+	User User
 }
 

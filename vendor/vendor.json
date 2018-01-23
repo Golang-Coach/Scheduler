@@ -15,6 +15,18 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "lXTlmL4mfVGLvXOF+dT9Utxbabk=",
+			"path": "github.com/bradleyfalzon/ghinstallation",
+			"revision": "a3101aec88b9c29a9a1f71199645aa60606c4fd4",
+			"revisionTime": "2017-10-31T23:12:48Z"
+		},
+		{
+			"checksumSHA1": "+TKtBzv23ywvmmqRiGEjUba4YmI=",
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "dbeaa9332f19a944acb5736b4456cfcc02140e29",
+			"revisionTime": "2017-10-19T21:57:19Z"
+		},
+		{
 			"checksumSHA1": "yqF125xVSkmfLpIVGrLlfE05IUk=",
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "1e59b77b52bf8e4b449a57e6f79f21226d571845",

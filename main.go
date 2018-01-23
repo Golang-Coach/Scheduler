@@ -5,37 +5,26 @@ import (
 	"os"
 	"gopkg.in/mgo.v2"
 	"time"
-	//"net"
-	//"crypto/tls"
 	"github.com/Golang-Coach/Scheduler/services"
 	"context"
 	"github.com/google/go-github/github"
-
-
-	//"log"
-	//"github.com/Golang-Coach/Scheduler/models"
-	//"golang.org/x/oauth2"
+	"github.com/Golang-Coach/Scheduler/scheduler"
+	"golang.org/x/oauth2"
 )
 
 func main() {
 
-
-	// TODO -- this is to create Github service
 	backgroundContext := context.Background()
-	//tokenService := oauth2.StaticTokenSource(
-	//	&oauth2.Token{AccessToken: "22ffe92b14c28bf8ec53e7f0102ed240c1e02633"},
-	//)
-	//tokenClient := oauth2.NewClient(backgroundContext, tokenService)
-	//client := *github.NewClient(tokenClient)
-	client := *github.NewClient(nil)
+	tokenService := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken:  os.Getenv("token")},
+	)
+	tokenClient := oauth2.NewClient(backgroundContext, tokenService)
+	client := *github.NewClient(tokenClient)
 	githubApi := services.NewGithub(&client, client.Repositories, backgroundContext)
 	pack, err := githubApi.GetLastCommitInfo("Golang-Coach", "Lessons")
-	//packa := models.RepositoryInfo{
-	//	UpdatedAt: pack.Commit.Committer.GetDate(),
-	//}
-	fmt.Println(pack.Commit.Committer.GetDate())
-	//fmt.Println(packa)
-	//fmt.Println(err);
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	// TODO -- this is used to connect to MongoDB
 	// DialInfo holds options for establishing a session with a MongoDB cluster.
@@ -68,7 +57,7 @@ func main() {
 	session.SetSafe(&mgo.Safe{})
 
 	// get collection
-	collection := session.DB("golang-couch").C("package")
+	collection := session.DB("golang-couch").C("repositories")
 
 	 //insert Document in collection
 	//err = collection.Insert(&models.RepositoryInfo{
@@ -87,7 +76,7 @@ func main() {
 	//	return
 	//}
 	dataStore := services.NewDataStore(collection)
-	Schedule(dataStore, githubApi)
+	scheduler.Schedule(dataStore, githubApi)
 	//Schedule(dataStore, githubApi)
 	//fmt.Println(collection)
 	//fmt.Println(githubApi.GetRateLimitInfo())
