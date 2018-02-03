@@ -6,6 +6,7 @@ import (
 	"github.com/Golang-Coach/Scheduler/models"
 	"github.com/Golang-Coach/Scheduler/services"
 	"gopkg.in/mgo.v2/bson"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestDataStore(t *testing.T) {

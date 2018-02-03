@@ -28,6 +28,11 @@ jobs:
       - run: go get github.com/kardianos/govendor
 
       - run: go get github.com/mitchellh/gox
+      - run: go golang.org/x/tools/cmd/cover
+      - run: go github.com/axw/gocov/gocov
+      - run: go github.com/mattn/goveralls
+      - run: go github.com/onsi/ginkgo/ginkgo
+      - run: go github.com/modocache/gover
 
       - run: govendor sync
 
@@ -37,6 +42,10 @@ jobs:
           key: vendor-dependencies
 
       - run: gox -os="linux"
+
+      - run: $HOME/gopath/bin/ginkgo -r  -cover -trace -race
+      - run: $HOME/gopath/bin/gover
+      - run: $HOME/gopath/bin/goveralls -coverprofile=gover.coverprofile -repotoken 5lTOPeAe3YzQuxISzXByVBHIjefWvkeMh
 
       - setup_remote_docker
 

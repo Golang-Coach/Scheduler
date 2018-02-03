@@ -22,7 +22,7 @@ type IGithub interface {
 	GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error)
 	GetReadMe(owner string, repositoryName string) (string, error)
 	GetRateLimitInfo() (*github.RateLimits, error)
-	GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error)
+	GetUpdatedRepositoryInfo(repositoryInfo models.RepositoryInfo) (*models.RepositoryInfo, error)
 }
 
 type IClient interface {
@@ -82,7 +82,7 @@ func (service Github) GetRateLimitInfo() (*github.RateLimits, error) {
 	return rateLimitInfo, err
 }
 
-func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.RepositoryInfo) (*models.RepositoryInfo, error) {
+func (service Github) GetUpdatedRepositoryInfo(repositoryInfo models.RepositoryInfo) (*models.RepositoryInfo, error) {
 	// Call last update information from Github API
 	if len(strings.TrimSpace(repositoryInfo.Owner)) == 0 || len(strings.TrimSpace(repositoryInfo.Name)) == 0 {
 		return nil, errors.New("Repository Name is incorrect")

@@ -1,14 +1,16 @@
 package services_test
 
 import (
-	"github.com/Golang-Coach/Scheduler/mocks"
 	"context"
-	"testing"
-	"errors"
 	"encoding/base64"
+	"errors"
+	"github.com/Golang-Coach/Scheduler/mocks"
 	"github.com/Golang-Coach/Scheduler/models"
-	"time"
 	"github.com/Golang-Coach/Scheduler/services"
+	. "github.com/google/go-github/github"
+	. "github.com/smartystreets/goconvey/convey"
+	"testing"
+	"time"
 )
 
 func TestGithubAPI(t *testing.T) {
@@ -29,7 +31,7 @@ func TestGithubAPI(t *testing.T) {
 			}
 			repositoryServices.On("Get", backgroundContext, "golang-coach", "Lessons").Return(repo, nil, nil)
 			repositoryInfo, _ := githubService.GetRepositoryInfo("golang-coach", "Lessons")
-			So(repositoryInfo.ForksCount, ShouldEqual, starCount)
+			So(repositoryInfo.Forks, ShouldEqual, starCount)
 		})
 
 		Convey("Should return error when failed to retrieve  repository information", func() {
@@ -111,6 +113,8 @@ func TestGithubAPI(t *testing.T) {
 
 		Convey("Should return updated repository information", func() {
 			fullName := "facebook/react"
+			authorName := "authorName1"
+			authorProfileUrl := "http://golang.coach"
 
 			starCount := 10
 			repo := &Repository{
@@ -121,10 +125,10 @@ func TestGithubAPI(t *testing.T) {
 				StargazersCount: &starCount,
 			}
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
@@ -133,6 +137,13 @@ func TestGithubAPI(t *testing.T) {
 					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
+					Author: &CommitAuthor{
+						Name: &authorName,
+					},
+				},
+				Author: &User{
+					Login:     &authorName,
+					AvatarURL: &authorProfileUrl,
 				},
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
@@ -147,16 +158,17 @@ func TestGithubAPI(t *testing.T) {
 			repositoryServices.On("GetReadme", backgroundContext, "facebook", "react", (*RepositoryContentGetOptions)(nil)).Return(repositoryContent, nil, nil)
 
 			repositoryInfo, _ := githubService.GetUpdatedRepositoryInfo(storeRepo)
-			So(repositoryInfo.ForksCount, ShouldEqual, starCount)
+			So(repositoryInfo.Forks, ShouldEqual, starCount)
+			So(repositoryInfo.User.ProfileUrl, ShouldEqual, authorProfileUrl)
 		})
 
 		Convey("Should return error when repository name is empty", func() {
 			fullName := "facebook/react"
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "",
+				Name:      "",
 				UpdatedAt: time.Now(),
 			}
 
@@ -168,10 +180,10 @@ func TestGithubAPI(t *testing.T) {
 		Convey("Should return error when repository Owner is empty", func() {
 			fullName := "facebook/react"
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: time.Now(),
 			}
 
@@ -182,10 +194,10 @@ func TestGithubAPI(t *testing.T) {
 		Convey("Should return error when failed to retrieve last commit information", func() {
 			fullName := "facebook/react"
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: time.Now(),
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
@@ -197,12 +209,14 @@ func TestGithubAPI(t *testing.T) {
 
 		Convey("Should return nil where repository does not change", func() {
 			fullName := "facebook/react"
+			authorName := "authorName1"
+			authorProfileUrl := "http://golang.coach"
 
 			commitTime := time.Now()
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: commitTime,
 			}
 			repositoryCommit := &RepositoryCommit{
@@ -210,6 +224,13 @@ func TestGithubAPI(t *testing.T) {
 					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
+					Author: &CommitAuthor{
+						Name: &authorName,
+					},
+				},
+				Author: &User{
+					Login:     &authorName,
+					AvatarURL: &authorProfileUrl,
 				},
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
@@ -221,11 +242,13 @@ func TestGithubAPI(t *testing.T) {
 
 		Convey("Should return error when GetRepositoryInfo return error", func() {
 			fullName := "facebook/react"
+			authorName := "authorName1"
+			authorProfileUrl := "http://golang.coach"
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
@@ -234,6 +257,13 @@ func TestGithubAPI(t *testing.T) {
 					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
+					Author: &CommitAuthor{
+						Name: &authorName,
+					},
+				},
+				Author: &User{
+					Login:     &authorName,
+					AvatarURL: &authorProfileUrl,
 				},
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
@@ -247,6 +277,8 @@ func TestGithubAPI(t *testing.T) {
 
 		Convey("Should return error when ReadMe throws error", func() {
 			fullName := "facebook/react"
+			authorName := "authorName1"
+			authorProfileUrl := "http://golang.coach"
 
 			starCount := 10
 			repo := &Repository{
@@ -257,10 +289,10 @@ func TestGithubAPI(t *testing.T) {
 				StargazersCount: &starCount,
 			}
 
-			storeRepo := &models.RepositoryInfo{
+			storeRepo := models.RepositoryInfo{
 				FullName:  fullName,
 				Owner:     "facebook",
-				RepoName:  "react",
+				Name:      "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
@@ -269,6 +301,13 @@ func TestGithubAPI(t *testing.T) {
 					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
+					Author: &CommitAuthor{
+						Name: &authorName,
+					},
+				},
+				Author: &User{
+					Login:     &authorName,
+					AvatarURL: &authorProfileUrl,
 				},
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",

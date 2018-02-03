@@ -1,12 +1,13 @@
 package scheduler
 
 import (
-	"testing"
 	"github.com/Golang-Coach/Scheduler/mocks"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/Golang-Coach/Scheduler/models"
-	"time"
 	"github.com/pkg/errors"
+	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/mgo.v2/bson"
+	"testing"
+	"time"
 )
 
 func TestSchedule(t *testing.T) {
@@ -15,14 +16,14 @@ func TestSchedule(t *testing.T) {
 		githubService := new(mocks.IGithub)
 		dataStore := new(mocks.IDataStore)
 		repositoryInfo := models.RepositoryInfo{
-			RepoName: "react",
+			Name: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
-		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).Return(&repositoryInfo, nil)
+		githubService.On("GetUpdatedRepositoryInfo", repositoryInfo).Return(&repositoryInfo, nil)
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, nil)
 		dataStore.On("UpdatePackage", &repositoryInfo).Return(nil)
 		Schedule(dataStore, githubService)
-		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
+		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", repositoryInfo), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "FindPackageWithinLimit", bson.M{}, 0, 500), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "UpdatePackage", &repositoryInfo), ShouldBeTrue)
 	})
@@ -31,13 +32,13 @@ func TestSchedule(t *testing.T) {
 		githubService := new(mocks.IGithub)
 		dataStore := new(mocks.IDataStore)
 		repositoryInfo := models.RepositoryInfo{
-			RepoName: "react",
+			Name: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
-		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).Return(nil, nil)
+		githubService.On("GetUpdatedRepositoryInfo", repositoryInfo).Return(nil, nil)
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, nil)
 		Schedule(dataStore, githubService)
-		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
+		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", repositoryInfo), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "FindPackageWithinLimit", bson.M{}, 0, 500), ShouldBeTrue)
 		So(dataStore.AssertNotCalled(t, "UpdatePackage", &repositoryInfo), ShouldBeTrue)
 	})
@@ -46,29 +47,29 @@ func TestSchedule(t *testing.T) {
 		githubService := new(mocks.IGithub)
 		dataStore := new(mocks.IDataStore)
 		repositoryInfo := models.RepositoryInfo{
-			RepoName: "react",
+			Name: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
-		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).WaitUntil(time.After(6 * time.Second)).Return(&repositoryInfo, nil)
+		githubService.On("GetUpdatedRepositoryInfo", repositoryInfo).WaitUntil(time.After(6*time.Second)).Return(&repositoryInfo, nil)
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, nil)
 		Schedule(dataStore, githubService)
-		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
+		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", repositoryInfo), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "FindPackageWithinLimit", bson.M{}, 0, 500), ShouldBeTrue)
-		So(dataStore.AssertNotCalled(t, "UpdatePackage", &repositoryInfo), ShouldBeTrue)
+		So(dataStore.AssertNotCalled(t, "UpdatePackage", repositoryInfo), ShouldBeTrue)
 	})
 
 	Convey("Should not update package if there is an error", t, func() {
 		githubService := new(mocks.IGithub)
 		dataStore := new(mocks.IDataStore)
 		repositoryInfo := models.RepositoryInfo{
-			RepoName: "react",
+			Name: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
-		githubService.On("GetUpdatedRepositoryInfo", &repositoryInfo).Return(&repositoryInfo, errors.New("Some problem"))
+		githubService.On("GetUpdatedRepositoryInfo", repositoryInfo).Return(&repositoryInfo, errors.New("Some problem"))
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, nil)
 		dataStore.On("UpdatePackage", &repositoryInfo).Return(nil)
 		Schedule(dataStore, githubService)
-		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
+		So(githubService.AssertCalled(t, "GetUpdatedRepositoryInfo", repositoryInfo), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "FindPackageWithinLimit", bson.M{}, 0, 500), ShouldBeTrue)
 		So(dataStore.AssertNotCalled(t, "UpdatePackage", &repositoryInfo), ShouldBeTrue)
 	})
@@ -77,12 +78,12 @@ func TestSchedule(t *testing.T) {
 		githubService := new(mocks.IGithub)
 		dataStore := new(mocks.IDataStore)
 		repositoryInfo := models.RepositoryInfo{
-			RepoName: "react",
+			Name: "react",
 		}
 		repos := []models.RepositoryInfo{repositoryInfo}
 		dataStore.On("FindPackageWithinLimit", bson.M{}, 0, 500).Return(&repos, errors.New("Some problem"))
 		Schedule(dataStore, githubService)
-		So(githubService.AssertNotCalled(t, "GetUpdatedRepositoryInfo", &repositoryInfo), ShouldBeTrue)
+		So(githubService.AssertNotCalled(t, "GetUpdatedRepositoryInfo", repositoryInfo), ShouldBeTrue)
 		So(dataStore.AssertCalled(t, "FindPackageWithinLimit", bson.M{}, 0, 500), ShouldBeTrue)
 		So(dataStore.AssertNotCalled(t, "UpdatePackage", &repositoryInfo), ShouldBeTrue)
 	})

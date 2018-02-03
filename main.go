@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"gopkg.in/mgo.v2"
-	"time"
-	"github.com/Golang-Coach/Scheduler/services"
 	"context"
-	"github.com/google/go-github/github"
+	"fmt"
 	"github.com/Golang-Coach/Scheduler/scheduler"
+	"github.com/Golang-Coach/Scheduler/services"
+	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
+	"gopkg.in/mgo.v2"
+	"os"
+	"time"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	tokenClient := oauth2.NewClient(backgroundContext, tokenService)
 	client := *github.NewClient(tokenClient)
 	githubApi := services.NewGithub(&client, client.Repositories, backgroundContext)
-	pack, err := githubApi.GetLastCommitInfo("Golang-Coach", "Lessons")
+	_, err := githubApi.GetLastCommitInfo("Golang-Coach", "Lessons")
 	if err != nil {
 		fmt.Println(err)
 	}

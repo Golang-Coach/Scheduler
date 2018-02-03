@@ -38,7 +38,7 @@ func updatePackage(repositories []models.RepositoryInfo, githubService services.
 
 	for _, repository := range repositories {
 		go func(repository models.RepositoryInfo) {
-			repoInfo, err := githubService.GetUpdatedRepositoryInfo(&repository)
+			repoInfo, err := githubService.GetUpdatedRepositoryInfo(repository)
 			ch <- &GithubResponse{
 				RepositoryInfo: repoInfo,
 				err:            err,

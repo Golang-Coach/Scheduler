@@ -22,7 +22,6 @@ func NewMailRequest(from string, title string, htmlMessage string, textMessage s
 		plainTextMessage: textMessage,
 		to:               receivers,
 	}
-
 }
 
 // SendMail is used to send message, it will ask user about title, htmlMessage, textMessage and list of recipient
