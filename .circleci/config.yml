@@ -25,6 +25,7 @@ jobs:
           keys:
           - vendor-dependencies
 
+      - run: go get github.com/kardianos/govendor
       - run: govendor sync
 
       - save_cache:
