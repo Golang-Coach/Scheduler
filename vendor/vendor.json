@@ -519,8 +519,10 @@
 			"revisionTime": "2017-12-31T12:27:32Z"
 		},
 		{
+			"checksumSHA1": "EyZXG5ksetBrvcQ1Tc0YbVGpuA4=",
 			"path": "github.com/stretchr/testify/mock",
-			"revision": ""
+			"revision": "a726187e3128d0a0ec37f73ca7c4d3e508e6c2e5",
+			"revisionTime": "2018-02-01T08:32:34Z"
 		},
 		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
