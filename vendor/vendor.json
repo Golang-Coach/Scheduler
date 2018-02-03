@@ -513,6 +513,12 @@
 			"revisionTime": "2017-05-31T22:18:38Z"
 		},
 		{
+			"checksumSHA1": "6thzskcj6XrMO5kW6GlRiuTDYjU=",
+			"path": "github.com/stretchr/objx",
+			"revision": "8a3f7159479fbc75b30357fbc48f380b7320f08e",
+			"revisionTime": "2018-01-29T17:20:03Z"
+		},
+		{
 			"checksumSHA1": "JIL0tHs3pEgHjXhtB3tJrz4C0h8=",
 			"path": "github.com/stretchr/testify",
 			"revision": "a726187e3128d0a0ec37f73ca7c4d3e508e6c2e5",
