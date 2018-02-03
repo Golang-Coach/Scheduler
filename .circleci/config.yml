@@ -46,7 +46,7 @@ jobs:
 
       - run: ginkgo -r  -cover -trace -race
       - run: gover
-      - run: goveralls -coverprofile=gover.coverprofile -repotoken $COVERALL_TOKEN
+      - run: goveralls -coverprofile=gover.coverprofile -service=circle-ci -repotoken $COVERALL_TOKEN
 
       - setup_remote_docker
 
