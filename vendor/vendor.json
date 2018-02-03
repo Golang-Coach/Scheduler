@@ -15,6 +15,24 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "uI0hFuHj5Amsq+6TzWcczBIdWZY=",
+			"path": "github.com/aws/aws-lambda-go/lambda",
+			"revision": "402b36fec7a68c704e137f7a91986702b2b0232d",
+			"revisionTime": "2018-02-03T02:39:53Z"
+		},
+		{
+			"checksumSHA1": "d4ehJWLS4YsqFG825pgwdvKDB6A=",
+			"path": "github.com/aws/aws-lambda-go/lambda/messages",
+			"revision": "402b36fec7a68c704e137f7a91986702b2b0232d",
+			"revisionTime": "2018-02-03T02:39:53Z"
+		},
+		{
+			"checksumSHA1": "f9MhOwQHveaPVWO6trwfqHa+W0M=",
+			"path": "github.com/aws/aws-lambda-go/lambdacontext",
+			"revision": "402b36fec7a68c704e137f7a91986702b2b0232d",
+			"revisionTime": "2018-02-03T02:39:53Z"
+		},
+		{
 			"checksumSHA1": "lXTlmL4mfVGLvXOF+dT9Utxbabk=",
 			"path": "github.com/bradleyfalzon/ghinstallation",
 			"revision": "a3101aec88b9c29a9a1f71199645aa60606c4fd4",

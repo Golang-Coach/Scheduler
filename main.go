@@ -10,33 +10,31 @@ import (
 	"gopkg.in/mgo.v2"
 	"os"
 	"time"
+	"net"
+	"crypto/tls"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func main() {
-
+func HandleRequest() {
 	backgroundContext := context.Background()
 	tokenService := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("token")},
+		&oauth2.Token{AccessToken: os.Getenv("github_token")},
 	)
 	tokenClient := oauth2.NewClient(backgroundContext, tokenService)
 	client := *github.NewClient(tokenClient)
 	githubApi := services.NewGithub(&client, client.Repositories, backgroundContext)
-	_, err := githubApi.GetLastCommitInfo("Golang-Coach", "Lessons")
-	if err != nil {
-		fmt.Println(err)
-	}
 
 	// TODO -- this is used to connect to MongoDB
 	// DialInfo holds options for establishing a session with a MongoDB cluster.
 	dialInfo := &mgo.DialInfo{
-		Addrs:   []string{"localhost:27017"}, // Get HOST + PORT
-		Timeout: 5 * time.Second,
-		//Database: "golancoach",                                                                             // It can be anything
-		//Username: "coach",                                                                             // Username
-		//Password: "Pa55word", // PASSWORD
-		//DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
-		//	return tls.Dial("tcp", addr.String(), &tls.Config{})
-		//},
+		Addrs:    []string{os.Getenv("database_hostname")}, // Get HOST + PORT
+		Timeout:  5 * time.Second,
+		Database: os.Getenv("database_name"),     // It can be anything
+		Username: os.Getenv("database_username"), // Username
+		Password: os.Getenv("database_password"),
+		DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
+			return tls.Dial("tcp", addr.String(), &tls.Config{})
+		},
 	}
 
 	// Create a session which maintains a pool of socket connections
@@ -59,62 +57,16 @@ func main() {
 	// get collection
 	collection := session.DB("golang-couch").C("repositories")
 
-	//insert Document in collection
-	//err = collection.Insert(&models.RepositoryInfo{
-	//	RepoName:"react",
-	//	Owner:"facebook",
-	//	//FullName:"react",
-	//	//Description:"A framework for building native apps with React.",
-	//	//ForksCount: 11392,
-	//	//StarsCount:48794,
-	//	//LastUpdatedBy:"shergin",
-	//
-	//})
-	//
-	//if err != nil {
-	//	log.Fatal("Problem inserting data: ", err)
-	//	return
-	//}
 	dataStore := services.NewDataStore(collection)
 	scheduler.Schedule(dataStore, githubApi)
-	//Schedule(dataStore, githubApi)
-	//fmt.Println(collection)
-	//fmt.Println(githubApi.GetRateLimitInfo())
+}
 
-	// Get Document from collection
-	//result := models.RepositoryInfo{}
-	//err = collection.Find(bson.M{"fullname": "react"}).One(&result)
-	//if err != nil {
-	//	log.Fatal("Error finding record: ", err)
-	//	return
-	//}
-	//
-	//fmt.Println("Description:", result.Description)
-	//
-	//// update document
-	//updateQuery := bson.M{"_id": result.ID}
-	//change := bson.M{"$set": bson.M{"fullname": "react-native"}}
-	//err = collection.Update(updateQuery, change)
-	//if err != nil {
-	//	log.Fatal("Error updating record: ", err)
-	//	return
-	//}
-
-	// delete document
-	//err = collection.Remove(updateQuery)
-	//if err != nil {
-	//	log.Fatal("Error deleting record: ", err)
-	//	return
-	//}
-
-	//c := cron.New()
-	//c.AddFunc("@every 1s", func() { fmt.Println("Every hour thirty") })
-	//c.Start()
-	//
-	//pack := models.RepositoryInfo{}
-	//fmt.Printf("%+v", pack)
-	//
-	//// wait forever
-	//<-make(chan int)
+func main() {
+	environment := os.Getenv("environment")
+	if environment != "production" {
+		HandleRequest()
+	} else {
+		lambda.Start(HandleRequest)
+	}
 
 }

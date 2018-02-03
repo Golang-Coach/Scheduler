@@ -42,11 +42,15 @@ jobs:
             - vendor
           key: vendor-dependencies
 
-      - run: gox -os="linux"
-
       - run: ginkgo -r  -cover -trace -race
       - run: gover
       - run: goveralls -coverprofile=gover.coverprofile -service=circle-ci -repotoken $COVERALL_TOKEN
+
+      - run: GOOS=linux go build -o main main.go
+      - run: zip main.zip main
+
+      - store_artifacts:
+          path: main.zip
 
       - setup_remote_docker
 
