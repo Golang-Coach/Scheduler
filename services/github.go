@@ -8,6 +8,7 @@ import (
 	"strings"
 	"errors"
 	"fmt"
+	"time"
 )
 
 type IRepositoryServices interface {
@@ -48,12 +49,12 @@ func (service Github) GetRepositoryInfo(owner string, repositoryName string) (*m
 		return nil, err
 	}
 	repositoryInfo := &models.RepositoryInfo{
-		Name: *repo.Name,
-		Owner:      strings.Split(*repo.FullName, "/")[0] ,
+		Name:        *repo.Name,
+		Owner:       strings.Split(*repo.FullName, "/")[0],
 		FullName:    *repo.FullName,
 		Description: *repo.Description,
-		Forks:  *repo.ForksCount,
-		Stars:  *repo.StargazersCount,
+		Forks:       *repo.ForksCount,
+		Stars:       *repo.StargazersCount,
 	}
 	return repositoryInfo, nil
 }
@@ -105,14 +106,14 @@ func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.Repository
 	newRepositoryInfo.ID = repositoryInfo.ID
 	newRepositoryInfo.UpdatedAt = lastCommitInfo.Commit.Committer.GetDate()
 	newRepositoryInfo.User = models.User{
-		Name: *lastCommitInfo.Commit.Author.Name,
-		UserName:*lastCommitInfo.Author.Login,
+		Name:       *lastCommitInfo.Commit.Author.Name,
+		UserName:   *lastCommitInfo.Author.Login,
 		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
 	}
 
 	fmt.Println(models.User{
-		Name: *lastCommitInfo.Commit.Author.Name,
-		UserName:*lastCommitInfo.Author.Login,
+		Name:       *lastCommitInfo.Commit.Author.Name,
+		UserName:   *lastCommitInfo.Author.Login,
 		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
 	})
 
@@ -121,6 +122,8 @@ func (service Github) GetUpdatedRepositoryInfo(repositoryInfo *models.Repository
 		return nil, err
 	}
 	newRepositoryInfo.ReadMe = string(github_flavored_markdown.Markdown([]byte(content)))
+	newRepositoryInfo.Processed = true
+	newRepositoryInfo.ProcessedAt = time.Now()
 
 	// data is same ignore, else update data
 	return newRepositoryInfo, nil

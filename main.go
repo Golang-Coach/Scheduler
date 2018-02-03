@@ -16,7 +16,7 @@ func main() {
 
 	backgroundContext := context.Background()
 	tokenService := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken:  os.Getenv("token")},
+		&oauth2.Token{AccessToken: os.Getenv("token")},
 	)
 	tokenClient := oauth2.NewClient(backgroundContext, tokenService)
 	client := *github.NewClient(tokenClient)
@@ -29,8 +29,8 @@ func main() {
 	// TODO -- this is used to connect to MongoDB
 	// DialInfo holds options for establishing a session with a MongoDB cluster.
 	dialInfo := &mgo.DialInfo{
-		Addrs:    []string{"localhost:27017"}, // Get HOST + PORT
-		Timeout:  5 * time.Second,
+		Addrs:   []string{"localhost:27017"}, // Get HOST + PORT
+		Timeout: 5 * time.Second,
 		//Database: "golancoach",                                                                             // It can be anything
 		//Username: "coach",                                                                             // Username
 		//Password: "Pa55word", // PASSWORD
@@ -59,7 +59,7 @@ func main() {
 	// get collection
 	collection := session.DB("golang-couch").C("repositories")
 
-	 //insert Document in collection
+	//insert Document in collection
 	//err = collection.Insert(&models.RepositoryInfo{
 	//	RepoName:"react",
 	//	Owner:"facebook",

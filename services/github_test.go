@@ -3,8 +3,6 @@ package services_test
 import (
 	"github.com/Golang-Coach/Scheduler/mocks"
 	"context"
-	. "github.com/smartystreets/goconvey/convey"
-	. "github.com/google/go-github/github"
 	"testing"
 	"errors"
 	"encoding/base64"
@@ -28,7 +26,6 @@ func TestGithubAPI(t *testing.T) {
 				Description:     &fullName,
 				ForksCount:      &starCount,
 				StargazersCount: &starCount,
-
 			}
 			repositoryServices.On("Get", backgroundContext, "golang-coach", "Lessons").Return(repo, nil, nil)
 			repositoryInfo, _ := githubService.GetRepositoryInfo("golang-coach", "Lessons")
@@ -122,19 +119,18 @@ func TestGithubAPI(t *testing.T) {
 				Description:     &fullName,
 				ForksCount:      &starCount,
 				StargazersCount: &starCount,
-
 			}
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
 			repositoryCommit := &RepositoryCommit{
-				Commit:&Commit{
-					Committer:&CommitAuthor{
+				Commit: &Commit{
+					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
 				},
@@ -158,9 +154,9 @@ func TestGithubAPI(t *testing.T) {
 			fullName := "facebook/react"
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "",
 				UpdatedAt: time.Now(),
 			}
 
@@ -173,9 +169,9 @@ func TestGithubAPI(t *testing.T) {
 			fullName := "facebook/react"
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "",
+				RepoName:  "react",
 				UpdatedAt: time.Now(),
 			}
 
@@ -187,13 +183,13 @@ func TestGithubAPI(t *testing.T) {
 			fullName := "facebook/react"
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "react",
 				UpdatedAt: time.Now(),
 			}
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
-				(*CommitsListOptions)(nil)).Return(nil, nil,  errors.New("Error has been occurred"))
+				(*CommitsListOptions)(nil)).Return(nil, nil, errors.New("Error has been occurred"))
 
 			_, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
 			So(err, ShouldNotBeEmpty)
@@ -204,14 +200,14 @@ func TestGithubAPI(t *testing.T) {
 
 			commitTime := time.Now()
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "react",
 				UpdatedAt: commitTime,
 			}
 			repositoryCommit := &RepositoryCommit{
-				Commit:&Commit{
-					Committer:&CommitAuthor{
+				Commit: &Commit{
+					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
 				},
@@ -227,15 +223,15 @@ func TestGithubAPI(t *testing.T) {
 			fullName := "facebook/react"
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
 			repositoryCommit := &RepositoryCommit{
-				Commit:&Commit{
-					Committer:&CommitAuthor{
+				Commit: &Commit{
+					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
 				},
@@ -259,19 +255,18 @@ func TestGithubAPI(t *testing.T) {
 				Description:     &fullName,
 				ForksCount:      &starCount,
 				StargazersCount: &starCount,
-
 			}
 
 			storeRepo := &models.RepositoryInfo{
-				FullName:fullName,
-				Owner: "facebook",
-				RepoName: "react",
+				FullName:  fullName,
+				Owner:     "facebook",
+				RepoName:  "react",
 				UpdatedAt: time.Now(),
 			}
 			commitTime := time.Now()
 			repositoryCommit := &RepositoryCommit{
-				Commit:&Commit{
-					Committer:&CommitAuthor{
+				Commit: &Commit{
+					Committer: &CommitAuthor{
 						Date: &commitTime,
 					},
 				},
@@ -279,7 +274,7 @@ func TestGithubAPI(t *testing.T) {
 			repositoryServices.On("ListCommits", backgroundContext, "facebook", "react",
 				(*CommitsListOptions)(nil)).Return([]*RepositoryCommit{repositoryCommit}, nil, nil)
 			repositoryServices.On("Get", backgroundContext, "facebook", "react").Return(repo, nil, nil)
-			repositoryServices.On("GetReadme", backgroundContext, "facebook", "react", (*RepositoryContentGetOptions)(nil)).Return(nil, nil,  errors.New("There is some problem"))
+			repositoryServices.On("GetReadme", backgroundContext, "facebook", "react", (*RepositoryContentGetOptions)(nil)).Return(nil, nil, errors.New("There is some problem"))
 
 			repositoryInfo, err := githubService.GetUpdatedRepositoryInfo(storeRepo)
 			So(err, ShouldNotBeEmpty)

@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	"testing"
-	. "github.com/smartystreets/goconvey/convey"
 	"github.com/Golang-Coach/Scheduler/mocks"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/Golang-Coach/Scheduler/models"

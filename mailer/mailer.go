@@ -5,22 +5,22 @@ import (
 )
 
 type MailRequest struct {
-	from    string
-	title   string
-	subject string
-	htmlMessage    string
+	from             string
+	title            string
+	subject          string
+	htmlMessage      string
 	plainTextMessage string
-	to []string
+	to               []string
 }
 
 // Create new mail request
 func NewMailRequest(from string, title string, htmlMessage string, textMessage string, receivers []string) *MailRequest {
 	return &MailRequest{
-		from:  from,
-		title: title,
-		htmlMessage:htmlMessage,
-		plainTextMessage:textMessage,
-		to: receivers,
+		from:             from,
+		title:            title,
+		htmlMessage:      htmlMessage,
+		plainTextMessage: textMessage,
+		to:               receivers,
 	}
 
 }
@@ -53,9 +53,8 @@ func (mailRequest *MailRequest) SendMail() (bool, error) {
 	//message.AddCC("baz@example.com")
 	//message.AddBCC("bar@example.com")
 
-
 	// send message and get result
-	if _, _, err :=  mg.Send(message); err != nil {
+	if _, _, err := mg.Send(message); err != nil {
 		return false, err
 	}
 

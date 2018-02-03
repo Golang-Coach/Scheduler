@@ -2,7 +2,6 @@ package services_test
 
 import (
 	"testing"
-	. "github.com/smartystreets/goconvey/convey"
 	"github.com/Golang-Coach/Scheduler/mocks"
 	"github.com/Golang-Coach/Scheduler/models"
 	"github.com/Golang-Coach/Scheduler/services"
