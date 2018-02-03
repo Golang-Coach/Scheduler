@@ -27,6 +27,7 @@ jobs:
 
       - run: go get github.com/kardianos/govendor
       - run: go get github.com/stretchr/testify
+      - run: go get github.com/smartystreets/goconvey/
       - run: go get github.com/mitchellh/gox
       - run: go get golang.org/x/tools/cmd/cover
       - run: go get github.com/axw/gocov/gocov
