@@ -69,6 +69,12 @@
 			"revisionTime": "2017-10-31T23:12:48Z"
 		},
 		{
+			"checksumSHA1": "CSPbwbyzqA6sfORicn4HFtIhF/c=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "87df7c60d5820d0f8ae11afede5aa52325c09717",
+			"revisionTime": "2018-01-29T09:57:49Z"
+		},
+		{
 			"checksumSHA1": "ULnk7ggN82JFO0ZdBCmSsQH3Vh8=",
 			"path": "github.com/dchest/safefile",
 			"revision": "855e8d98f1852d48dde521e0522408d1fe7e836a",
