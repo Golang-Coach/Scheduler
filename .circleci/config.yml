@@ -26,6 +26,14 @@ jobs:
           - vendor-dependencies
 
       - run: go get github.com/kardianos/govendor
+      - run: go get github.com/smartystreets/goconvey/
+      - run: go get github.com/mitchellh/gox
+      - run: go get golang.org/x/tools/cmd/cover
+      - run: go get github.com/axw/gocov/gocov
+      - run: go get github.com/mattn/goveralls
+      - run: go get github.com/onsi/ginkgo/ginkgo
+      - run: go get github.com/modocache/gover
+
       - run: govendor sync
 
       - save_cache:
