@@ -21,10 +21,6 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-          - vendor-dependencies
-
       - run: |
                 go get github.com/kardianos/govendor
                 go get github.com/smartystreets/goconvey
@@ -37,11 +33,6 @@ jobs:
                 go get github.com/modocache/gover
 
       - run: govendor sync
-
-      - save_cache:
-          paths:
-            - vendor
-          key: vendor-dependencies
 
       - run: ginkgo -r  -cover -trace -race
       - run: gover
