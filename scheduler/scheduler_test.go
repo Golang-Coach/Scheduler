@@ -5,7 +5,7 @@ import (
 	"github.com/Golang-Coach/Scheduler/models"
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/mgo.v2/bson"
+	"github.com/globalsign/mgo/bson"
 	"testing"
 	"time"
 )
@@ -14,7 +14,7 @@ func TestSchedule(t *testing.T) {
 
 	Convey("Should update latest packages", t, func() {
 		githubService := new(mocks.IGithub)
-		dataStore := new(mocks.IDataStore)
+		dataStore := new(mocks.IRepositoryStore)
 		repositoryInfo := models.RepositoryInfo{
 			Name: "react",
 		}
@@ -30,7 +30,7 @@ func TestSchedule(t *testing.T) {
 
 	Convey("Should not update latest package if there is not change in package", t, func() {
 		githubService := new(mocks.IGithub)
-		dataStore := new(mocks.IDataStore)
+		dataStore := new(mocks.IRepositoryStore)
 		repositoryInfo := models.RepositoryInfo{
 			Name: "react",
 		}
@@ -45,7 +45,7 @@ func TestSchedule(t *testing.T) {
 
 	Convey("Should not update latest package because of timeout", t, func() {
 		githubService := new(mocks.IGithub)
-		dataStore := new(mocks.IDataStore)
+		dataStore := new(mocks.IRepositoryStore)
 		repositoryInfo := models.RepositoryInfo{
 			Name: "react",
 		}
@@ -60,7 +60,7 @@ func TestSchedule(t *testing.T) {
 
 	Convey("Should not update package if there is an error", t, func() {
 		githubService := new(mocks.IGithub)
-		dataStore := new(mocks.IDataStore)
+		dataStore := new(mocks.IRepositoryStore)
 		repositoryInfo := models.RepositoryInfo{
 			Name: "react",
 		}
@@ -76,7 +76,7 @@ func TestSchedule(t *testing.T) {
 
 	Convey("Should not process if failed to retrieve package information", t, func() {
 		githubService := new(mocks.IGithub)
-		dataStore := new(mocks.IDataStore)
+		dataStore := new(mocks.IRepositoryStore)
 		repositoryInfo := models.RepositoryInfo{
 			Name: "react",
 		}

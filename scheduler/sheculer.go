@@ -1,10 +1,10 @@
 package scheduler
 
 import (
-	"github.com/Golang-Coach/Scheduler/models"
-	"github.com/Golang-Coach/Scheduler/services"
-	"gopkg.in/mgo.v2/bson"
 	"fmt"
+	"github.com/Golang-Coach/Scheduler/interfaces"
+	"github.com/Golang-Coach/Scheduler/models"
+	"github.com/globalsign/mgo/bson"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type GithubResponse struct {
 	err            error
 }
 
-func Schedule(dataStore services.IDataStore, githubService services.IGithub) {
+func Schedule(dataStore interfaces.IRepositoryStore, githubService interfaces.IGithub) {
 	// get data from database
 	repositories, err := dataStore.FindPackageWithinLimit(bson.M{}, 0, 500)
 	if err != nil {
@@ -32,7 +32,7 @@ func Schedule(dataStore services.IDataStore, githubService services.IGithub) {
 	}
 }
 
-func updatePackage(repositories []models.RepositoryInfo, githubService services.IGithub) []*GithubResponse {
+func updatePackage(repositories []models.RepositoryInfo, githubService interfaces.IGithub) []*GithubResponse {
 	ch := make(chan *GithubResponse)
 	responses := []*GithubResponse{}
 
@@ -55,7 +55,7 @@ func updatePackage(repositories []models.RepositoryInfo, githubService services.
 			}
 		case <-time.After(5 * time.Second):
 			fmt.Println("Timeout")
-			return responses;
+			return responses
 		}
 	}
 	return responses

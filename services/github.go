@@ -9,21 +9,10 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"github.com/Golang-Coach/Scheduler/interfaces"
 )
 
-type IRepositoryServices interface {
-	Get(ctx context.Context, owner, repo string) (*github.Repository, *github.Response, error)
-	ListCommits(ctx context.Context, owner, repo string, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
-	GetReadme(ctx context.Context, owner, repo string, opt *github.RepositoryContentGetOptions) (*github.RepositoryContent, *github.Response, error)
-}
 
-type IGithub interface {
-	GetRepositoryInfo(owner string, repositoryName string) (*models.RepositoryInfo, error)
-	GetLastCommitInfo(owner string, repositoryName string) (*github.RepositoryCommit, error)
-	GetReadMe(owner string, repositoryName string) (string, error)
-	GetRateLimitInfo() (*github.RateLimits, error)
-	GetUpdatedRepositoryInfo(repositoryInfo models.RepositoryInfo) (*models.RepositoryInfo, error)
-}
 
 type IClient interface {
 	RateLimits(ctx context.Context) (*github.RateLimits, *github.Response, error)
@@ -31,11 +20,11 @@ type IClient interface {
 
 type Github struct {
 	client             IClient
-	repositoryServices IRepositoryServices
+	repositoryServices interfaces.IRepositoryServices
 	context            context.Context
 }
 
-func NewGithub(client IClient, repositoryServices IRepositoryServices, context context.Context) Github {
+func NewGithub(client IClient, repositoryServices interfaces.IRepositoryServices, context context.Context) Github {
 	return Github{
 		client:             client,
 		repositoryServices: repositoryServices,

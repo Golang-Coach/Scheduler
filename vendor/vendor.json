@@ -87,6 +87,36 @@
 			"revisionTime": "2017-10-19T21:57:19Z"
 		},
 		{
+			"checksumSHA1": "Ixz+tDG4HsFokZH06wx3KNG5NZ4=",
+			"path": "github.com/globalsign/mgo",
+			"revision": "896bbb89d21253a28cd5a7f8b81fe091410cb94d",
+			"revisionTime": "2018-01-15T17:41:36Z"
+		},
+		{
+			"checksumSHA1": "20/KUMBiBbevHleJU9eoTUwFr2w=",
+			"path": "github.com/globalsign/mgo/bson",
+			"revision": "896bbb89d21253a28cd5a7f8b81fe091410cb94d",
+			"revisionTime": "2018-01-15T17:41:36Z"
+		},
+		{
+			"checksumSHA1": "//bXQG4HblBwxHJDIW/PklXAxu0=",
+			"path": "github.com/globalsign/mgo/internal/json",
+			"revision": "896bbb89d21253a28cd5a7f8b81fe091410cb94d",
+			"revisionTime": "2018-01-15T17:41:36Z"
+		},
+		{
+			"checksumSHA1": "zSNjAU41khuKovmSSkhVqXf5q4A=",
+			"path": "github.com/globalsign/mgo/internal/sasl",
+			"revision": "896bbb89d21253a28cd5a7f8b81fe091410cb94d",
+			"revisionTime": "2018-01-15T17:41:36Z"
+		},
+		{
+			"checksumSHA1": "YogZ7HaSnE0pxdiP48GdI1+CXeI=",
+			"path": "github.com/globalsign/mgo/internal/scram",
+			"revision": "896bbb89d21253a28cd5a7f8b81fe091410cb94d",
+			"revisionTime": "2018-01-15T17:41:36Z"
+		},
+		{
 			"checksumSHA1": "yqF125xVSkmfLpIVGrLlfE05IUk=",
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "1e59b77b52bf8e4b449a57e6f79f21226d571845",
@@ -649,36 +679,6 @@
 			"path": "gopkg.in/mailgun/mailgun-go.v1",
 			"revision": "a4002e2df2e8ca2da6a6fbb4a72871b504e49f50",
 			"revisionTime": "2017-02-13T15:09:30Z"
-		},
-		{
-			"checksumSHA1": "1D8GzeoFGUs5FZOoyC2DpQg8c5Y=",
-			"path": "gopkg.in/mgo.v2",
-			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
-			"revisionTime": "2016-08-18T02:01:20Z"
-		},
-		{
-			"checksumSHA1": "YsB2DChSV9HxdzHaKATllAUKWSI=",
-			"path": "gopkg.in/mgo.v2/bson",
-			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
-			"revisionTime": "2016-08-18T02:01:20Z"
-		},
-		{
-			"checksumSHA1": "XQsrqoNT1U0KzLxOFcAZVvqhLfk=",
-			"path": "gopkg.in/mgo.v2/internal/json",
-			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
-			"revisionTime": "2016-08-18T02:01:20Z"
-		},
-		{
-			"checksumSHA1": "LEvMCnprte47qdAxWvQ/zRxVF1U=",
-			"path": "gopkg.in/mgo.v2/internal/sasl",
-			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
-			"revisionTime": "2016-08-18T02:01:20Z"
-		},
-		{
-			"checksumSHA1": "+1WDRPaOphSCmRMxVPIPBV4aubc=",
-			"path": "gopkg.in/mgo.v2/internal/scram",
-			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
-			"revisionTime": "2016-08-18T02:01:20Z"
 		},
 		{
 			"checksumSHA1": "qOmvuDm+F+2nQQecUZBVkZrTn6Y=",
