@@ -1,1 +1,7 @@
-0a1dee49c092ae200a8ae78b09dda3dc520523ff
+github_token = 0a1dee49c092ae200a8ae78b09dda3dc520523ff
+database_hostname = golang-couch.documents.azure.com:10255
+database_name = golang-couch
+database_username = golang-coach
+database_password = 02lgiHBWQpRndXAp8SfYhOfe25kVO5DgD57ONNEE5C2gtT3C8Wp3CgxGblyxl9dfuANxFwYSgTiRbob5Iar3Ow==
+
+

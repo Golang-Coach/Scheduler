@@ -1,18 +1,15 @@
 package services
 
 import (
-	"github.com/google/go-github/github"
 	"context"
+	"errors"
+	"github.com/Golang-Coach/Scheduler/interfaces"
 	"github.com/Golang-Coach/Scheduler/models"
+	"github.com/google/go-github/github"
 	"github.com/shurcooL/github_flavored_markdown"
 	"strings"
-	"errors"
-	"fmt"
 	"time"
-	"github.com/Golang-Coach/Scheduler/interfaces"
 )
-
-
 
 type IClient interface {
 	RateLimits(ctx context.Context) (*github.RateLimits, *github.Response, error)
@@ -99,12 +96,6 @@ func (service Github) GetUpdatedRepositoryInfo(repositoryInfo models.RepositoryI
 		UserName:   *lastCommitInfo.Author.Login,
 		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
 	}
-
-	fmt.Println(models.User{
-		Name:       *lastCommitInfo.Commit.Author.Name,
-		UserName:   *lastCommitInfo.Author.Login,
-		ProfileUrl: *lastCommitInfo.Author.AvatarURL,
-	})
 
 	content, err := service.GetReadMe(repositoryInfo.Owner, repositoryInfo.Name)
 	if err != nil {

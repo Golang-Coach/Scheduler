@@ -1,11 +1,11 @@
 package scheduler
 
 import (
-	"fmt"
 	"github.com/Golang-Coach/Scheduler/interfaces"
 	"github.com/Golang-Coach/Scheduler/models"
 	"github.com/globalsign/mgo/bson"
 	"time"
+	"log"
 )
 
 type GithubResponse struct {
@@ -17,7 +17,7 @@ func Schedule(dataStore interfaces.IRepositoryStore, githubService interfaces.IG
 	// get data from database
 	repositories, err := dataStore.FindPackageWithinLimit(bson.M{}, 0, 500)
 	if err != nil {
-		fmt.Println("Error")
+		log.Fatalln("Error", err)
 		return
 	}
 
@@ -25,7 +25,7 @@ func Schedule(dataStore interfaces.IRepositoryStore, githubService interfaces.IG
 
 	for _, response := range responses {
 		if response.err != nil {
-			fmt.Println(response.err)
+			log.Fatalln("Error", response.err)
 		} else if response.RepositoryInfo != nil {
 			dataStore.UpdatePackage(response.RepositoryInfo)
 		}
@@ -54,7 +54,7 @@ func updatePackage(repositories []models.RepositoryInfo, githubService interface
 				return responses
 			}
 		case <-time.After(5 * time.Second):
-			fmt.Println("Timeout")
+			log.Fatalln("Timeout")
 			return responses
 		}
 	}
