@@ -17,7 +17,7 @@ func dialServer(addr *mgo.ServerAddr) (net.Conn, error) {
 func Connect() *DataStore {
 	// TODO -- this is used to connect to MongoDB
 	// DialInfo holds options for establishing a session with a MongoDB cluster.
-	dialInfo, err := mgo.ParseURL(os.Getenv("connection-string"))
+	dialInfo, err := mgo.ParseURL(os.Getenv("connection_string"))
 	dialInfo.DialServer = dialServer
 
 	// Create a session which maintains a pool of socket connections
